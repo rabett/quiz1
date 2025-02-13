@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General English MCQ Exam</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        .question {
+            margin: 15px 0;
+            text-align: left;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        .options input {
+            display: none;
+        }
+        .circle {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .options input:checked + .circle {
+            background-color: #28a745;
+            color: white;
+        }
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .submit-btn:hover {
+            background: #218838;
+        }
+        #timer {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #d9534f;
+        }
+        .correct { background-color: #c3e6cb; }
+        .wrong { background-color: #f8d7da; }
+        .skipped { background-color: #fff3cd; }
+        #congrats {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9800;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>General English MCQ Exam</h2>
+        <p id="timer">Time left: 10:00</p>
+        
+        <form id="quizForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required><br><br>
+        
+            <label for="studentId">Student ID:</label>
+            <input type="text" id="studentId" required><br><br>
+        
+            <div id="questions"></div>
+            <button type="button" class="submit-btn" onclick="submitQuiz()">Submit</button>
+        </form>
+        
+    </div>
+
+    <script>
+        const questions = [
+  {
+    "q": "Which of the following is a synonym of 'happy'?",
+    "options": ["Sad", "Elated", "Angry", "Bored"],
+    "correct": 1
+  },
+  {
+    "q": "What is the plural form of 'child'?",
+    "options": ["Childs", "Childes", "Children", "Childies"],
+    "correct": 2
+  },
+  {
+    "q": "Which sentence is grammatically correct?",
+    "options": [
+      "She go to school every day.",
+      "She goes to school every day.",
+      "She going to school every day.",
+      "She went to school every day."
+    ],
+    "correct": 1
+  },
+  {
+    "q": "What is the antonym of 'brave'?",
+    "options": ["Fearful", "Courageous", "Bold", "Heroic"],
+    "correct": 0
+  },
+  {
+    "q": "Which word is a noun?",
+    "options": ["Running", "Jump", "Beautiful", "Honesty"],
+    "correct": 3
+  },
+  {
+    "q": "Identify the verb in the sentence: 'She quickly finished her homework.'",
+    "options": ["She", "Quickly", "Finished", "Homework"],
+    "correct": 2
+  },
+  {
+    "q": "Which of the following words is spelled correctly?",
+    "options": ["Recieve", "Receive", "Recievee", "Reccieve"],
+    "correct": 1
+  },
+  {
+    "q": "Choose the correct article: 'I saw ____ elephant at the zoo.'",
+    "options": ["A", "An", "The", "No article needed"],
+    "correct": 1
+  },
+  {
+    "q": "Which of these is a past tense verb?",
+    "options": ["Run", "Running", "Ran", "Runs"],
+    "correct": 2
+  },
+  {
+    "q": "Which word means 'a place where books are kept'?",
+    "options": ["Library", "Museum", "Theater", "Auditorium"],
+    "correct": 0
+  },
+  {
+    "q": "Which pronoun correctly replaces the noun in: 'John and I went to the park'?",
+    "options": ["He", "They", "We", "Us"],
+    "correct": 2
+  },
+  {
+    "q": "Which word is an adjective?",
+    "options": ["Run", "Quickly", "Happy", "Happiness"],
+    "correct": 2
+  },
+  {
+    "q": "Identify the adverb in the sentence: 'She sang beautifully at the concert.'",
+    "options": ["She", "Sang", "Beautifully", "Concert"],
+    "correct": 2
+  },
+  {
+    "q": "What is the comparative form of 'good'?",
+    "options": ["Gooder", "More good", "Better", "Best"],
+    "correct": 2
+  },
+  {
+    "q": "Which sentence uses the correct preposition?",
+    "options": [
+      "She is good in math.",
+      "She is good at math.",
+      "She is good on math.",
+      "She is good by math."
+    ],
+    "correct": 1
+  },
+  {
+    "q": "What is the past participle of 'write'?",
+    "options": ["Writing", "Wrote", "Written", "Writes"],
+    "correct": 2
+  },
+  {
+    "q": "Which of the following is an example of an interjection?",
+    "options": ["Wow!", "Run", "Jump", "Because"],
+    "correct": 0
+  },
+  {
+    "q": "Which of these words is a conjunction?",
+    "options": ["Happy", "Quickly", "And", "Jump"],
+    "correct": 2
+  },
+  {
+    "q": "Identify the subject in the sentence: 'The dog barked loudly at night.'",
+    "options": ["Dog", "Barked", "Loudly", "Night"],
+    "correct": 0
+  },
+  {
+    "q": "Choose the correct sentence.",
+    "options": [
+      "She don't like coffee.",
+      "She doesn't like coffee.",
+      "She didn't likes coffee.",
+      "She isn't likes coffee."
+    ],
+    "correct": 1
+  },
+  {
+    "q": "What is the superlative form of 'fast'?",
+    "options": ["Faster", "Fastest", "More fast", "Most fast"],
+    "correct": 1
+  },
+  {
+    "q": "Which of the following is an example of a homophone?",
+    "options": ["Right and Write", "Dog and Cat", "Big and Small", "Jump and Run"],
+    "correct": 0
+  },
+  {
+    "q": "Choose the correctly punctuated sentence.",
+    "options": [
+      "It's raining outside.",
+      "Its raining outside.",
+      "It is' raining outside.",
+      "It raining outside."
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Which sentence is in passive voice?",
+    "options": [
+      "The chef cooked a delicious meal.",
+      "A delicious meal was cooked by the chef.",
+      "The chef is cooking a delicious meal.",
+      "The chef has cooked a delicious meal."
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Which word is a conjunction?",
+    "options": ["Because", "Happy", "Beautiful", "Runs"],
+    "correct": 0
+  },
+  {
+    "q": "Which sentence correctly uses 'their'?",
+    "options": [
+      "Their going to the store.",
+      "That is their car.",
+      "There going to the store.",
+      "They're car is blue."
+    ],
+    "correct": 1
+  },
+  {
+    "q": "What type of sentence is this? 'Please close the door.'",
+    "options": ["Declarative", "Interrogative", "Imperative", "Exclamatory"],
+    "correct": 2
+  }
+];
+
+        const labels = ["A", "B", "C", "D"];
+        const questionContainer = document.getElementById('questions');
+
+        questions.forEach((q, index) => {
+            const div = document.createElement('div');
+            div.classList.add('question');
+            div.innerHTML = `<p>${index + 1}. ${q.q}</p>`;
+            let optionsHTML = "";
+            q.options.forEach((option, i) => {
+                optionsHTML += `
+                    <label>
+                        <input type="radio" name="q${index}" value="${i}">
+                        <div class="circle">${labels[i]}</div> ${option}
+                    </label>
+                `;
+            });
+            div.innerHTML += `<div class="options">${optionsHTML}</div>`;
+            questionContainer.appendChild(div);
+        });
+
+        let timeLeft = 600;
+        let timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                submitQuiz();
+            } else {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                document.getElementById('timer').innerText = `Time left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                timeLeft--;
+            }
+        }, 1000);
+
+        function submitQuiz() {
+    clearInterval(timerInterval);
+    
+    let name = document.getElementById('name').value.trim();
+    let studentId = document.getElementById('studentId').value.trim();
+    let score = calculateScore(); // Implement the score calculation
+
+    if (!name || !studentId) {
+        alert("Please enter your Name and ID before submitting!");
+        return;
+    }
+
+    // Sending data to Google Sheets
+    fetch("https://script.google.com/macros/s/AKfycbxlxV866slxXIh4VnY0aEwaQOBXtEeysFCwepDf98gu_wgERbiIizjITqGCpTQ-1ZdH/exec", {
+        method: "POST",
+        body: JSON.stringify({ name, studentId, score }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log("Data sent to Google Sheets:", data);
+    });
+
+    // Show result
+    document.getElementById('result').innerText = `Your score: ${score} / ${questions.length}`;
+    alert(`Test Completed!\nName: ${name}\nID: ${studentId}\nScore: ${score} / ${questions.length}`);
+}
+
+// Function to calculate score
+function calculateScore() {
+    let score = 0;
+    questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name=q${index}]:checked`);
+        if (selected && parseInt(selected.value) === q.correct) {
+            score++;
+        }
+    });
+    return score;
+}
+
+    </script>
+</body>
+</html>
+
